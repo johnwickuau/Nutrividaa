@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil Familiar - NutriVida</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <section class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Perfil Nutricional Familiar</h1>
+        
+        <div class="max-w-4xl mx-auto">
+            <!-- Adicionar Membro -->
+            <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                <h2 class="text-xl font-semibold mb-4">Adicionar Membro da Família</h2>
+                <form class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-gray-700 mb-2">Nome</label>
+                            <input type="text" placeholder="Digite o nome" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-green-500">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Idade</label>
+                            <input type="number" placeholder="Digite a idade" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-green-500">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Peso (kg)</label>
+                            <input type="number" step="0.1" placeholder="Digite o peso" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-green-500">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Altura (cm)</label>
+                            <input type="number" placeholder="Digite a altura" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-green-500">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">Restrições Alimentares</label>
+                        <textarea class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-green-500" rows="2"></textarea>
+                    </div>
+                    <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition duration-300">
+                        Adicionar Membro
+                    </button>
+                </form>
+            </div>
+
+            <!-- Lista de Membros -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">Membros da Família</h2>
+                <div class="space-y-4" id="members-list">
+                    <!-- A lista de membros será preenchida dinamicamente -->
+                </div>
+            </div>
+
+            <!-- Botão de Voltar -->
+            <div class="text-center mt-6">
+                <a href="nutrition.html" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition duration-300">
+                    Voltar para Pagina Inicial
+                </a>
+            </div>
+        </div>
+    </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.querySelector('form');
+            const membersList = document.getElementById('members-list');
+            let familyProfiles = JSON.parse(localStorage.getItem('familyProfiles')) || [];
+
+            // Renderiza os membros salvos no localStorage
+            function renderFamilyProfiles() {
+                membersList.innerHTML = '';
+                familyProfiles.forEach((profile, index) => {
+                    const memberElement = document.createElement('div');
+                    memberElement.classList.add('border', 'p-4', 'rounded-lg');
+                    memberElement.innerHTML = `
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h3 class="font-semibold">${profile.name}</h3>
+                                <p class="text-gray-600">${profile.age} anos | ${profile.weight}kg | ${profile.height}cm</p>
+                                <p class="text-sm text-gray-500">Restrições: ${profile.restrictions || 'Nenhuma'}</p>
+                                <p class="text-sm text-gray-500"><strong>IMC:</strong> ${profile.imc} (${getIMCClassification(profile.imc)})</p>
+                                <p class="text-sm text-gray-500"><strong>Calorias Necessárias:</strong> ${profile.calories} kcal/dia</p>
+                            </div>
+                            <button class="text-red-500 hover:text-red-700 remove-member" data-index="${index}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    membersList.appendChild(memberElement);
+                });
+            }
+
+            // Adicionar Membro
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+
+                const name = form.querySelector('input[placeholder="Digite o nome"]').value;
+                const age = parseInt(form.querySelector('input[placeholder="Digite a idade"]').value);
+                const weight = parseFloat(form.querySelector('input[placeholder="Digite o peso"]').value);
+                const height = parseFloat(form.querySelector('input[placeholder="Digite a altura"]').value) / 100; // Converter para metros
+                const restrictions = form.querySelector('textarea').value;
+
+                // Calcular IMC
+                const imc = (weight / (height * height)).toFixed(2);
+
+                // Calcular Calorias Necessárias (Fórmula de Harris-Benedict para homens)
+                const bmr = 10 * weight + 6.25 * (height * 100) - 5 * age + 5; // Fórmula para homens
+                const activityLevel = 1.55; // Nível de atividade moderado (padrão)
+                const calories = (bmr * activityLevel).toFixed(0);
+
+                const newMember = { name, age, weight, height: height * 100, restrictions, imc, calories };
+                familyProfiles.push(newMember);
+
+                // Salva no localStorage
+                localStorage.setItem('familyProfiles', JSON.stringify(familyProfiles));
+
+                renderFamilyProfiles();
+                form.reset();
+            });
+
+            // Remover Membro
+            membersList.addEventListener('click', (event) => {
+                if (event.target.closest('.remove-member')) {
+                    const index = event.target.closest('.remove-member').dataset.index;
+                    familyProfiles.splice(index, 1);
+
+                    // Atualiza o localStorage
+                    localStorage.setItem('familyProfiles', JSON.stringify(familyProfiles));
+
+                    renderFamilyProfiles();
+                }
+            });
+
+            // Classificação do IMC
+            function getIMCClassification(imc) {
+                if (imc < 18.5) return 'Abaixo do peso';
+                if (imc >= 18.5 && imc < 24.9) return 'Peso normal';
+                if (imc >= 25 && imc < 29.9) return 'Sobrepeso';
+                if (imc >= 30 && imc < 34.9) return 'Obesidade Grau I';
+                if (imc >= 35 && imc < 39.9) return 'Obesidade Grau II';
+                return 'Obesidade Grau III';
+            }
+
+            // Renderiza os membros ao carregar a página
+            renderFamilyProfiles();
+        });
+    </script>
+</body>
+</html>

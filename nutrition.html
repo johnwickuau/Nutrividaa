@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriVida - Portal Nutricional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navbar -->
+    <nav class="bg-green-500 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold">NutriVida</a>
+            <div class="space-x-4">
+                <a href="index.html" class="hover:text-green-200">Início</a>
+                <a href="family-profile.html" class="hover:text-green-200">
+                    <i class="fas fa-users mr-1"></i>Criar Perfil Familiar
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Chat com Nutricionista -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold mb-6 text-green-600">
+                    <i class="fas fa-comments mr-2"></i>Chat com Nutricionista
+                </h2>
+                <div class="bg-gray-100 h-96 rounded-lg p-4 mb-4 overflow-y-auto">
+                    <!-- Mensagens do chat -->
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-500">Nutricionista Ana</p>
+                        <div class="bg-green-100 rounded-lg p-3 inline-block">
+                            Olá! Como posso ajudar você hoje?
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <input type="text" placeholder="Digite sua mensagem..." class="flex-1 p-2 border rounded-lg">
+                    <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Calculadora de Calorias -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold mb-6 text-green-600">
+                    <i class="fas fa-calculator mr-2"></i>Calculadora de Calorias
+                </h2>
+                <form id="calorie-form" class="space-y-4">
+                    <div>
+                        <label class="block text-gray-700 mb-2">Peso (kg)</label>
+                        <input type="number" id="weight" class="w-full p-2 border rounded-lg" placeholder="Digite seu peso">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">Altura (cm)</label>
+                        <input type="number" id="height" class="w-full p-2 border rounded-lg" placeholder="Digite sua altura">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">Idade</label>
+                        <input type="number" id="age" class="w-full p-2 border rounded-lg" placeholder="Digite sua idade">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">Nível de Atividade</label>
+                        <select id="activity-level" class="w-full p-2 border rounded-lg">
+                            <option value="1.2">Sedentário</option>
+                            <option value="1.375">Levemente Ativo</option>
+                            <option value="1.55">Moderadamente Ativo</option>
+                            <option value="1.725">Muito Ativo</option>
+                            <option value="1.9">Extremamente Ativo</option>
+                        </select>
+                    </div>
+                    <button type="button" onclick="calculateCalories()" class="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600">
+                        Calcular
+                    </button>
+                </form>
+                <div id="calorie-result" class="mt-4 text-gray-700">
+                    <!-- O resultado será exibido aqui -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Calculadora de IMC -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mt-8">
+            <h2 class="text-2xl font-bold mb-6 text-green-600">
+                <i class="fas fa-calculator mr-2"></i>Calculadora de IMC
+            </h2>
+            <form id="imc-form" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">Peso (kg)</label>
+                    <input type="number" id="imc-weight" class="w-full p-2 border rounded-lg" placeholder="Digite seu peso">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Altura (cm)</label>
+                    <input type="number" id="imc-height" class="w-full p-2 border rounded-lg" placeholder="Digite sua altura">
+                </div>
+                <button type="button" onclick="calculateIMC()" class="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600">
+                    Calcular IMC
+                </button>
+            </form>
+            <div id="imc-result" class="mt-4 text-gray-700">
+                <!-- O resultado será exibido aqui -->
+            </div>
+        </div>
+
+        <!-- Pratos Recomendados -->
+        <div class="mt-8">
+            <h2 class="text-2xl font-bold mb-6 text-green-600">
+                <i class="fas fa-utensils mr-2"></i>Pratos Recomendados
+            </h2>
+            <div id="recommended-dishes" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Os pratos recomendados serão inseridos aqui dinamicamente -->
+            </div>
+        </div>
+
+        <!-- Mercados Recomendados -->
+        <div class="mt-8">
+            <h2 class="text-2xl font-bold mb-6 text-green-600">
+                <i class="fas fa-store mr-2"></i>Mercados Recomendados
+            </h2>
+            <div id="recommended-markets" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Os mercados recomendados serão inseridos aqui dinamicamente -->
+            </div>
+        </div>
+
+        <!-- Recursos Adicionais -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+            <!-- Agendar Consulta -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-xl font-bold mb-4 text-green-600">
+                    <i class="fas fa-calendar-alt mr-2"></i>Agendar Consulta
+                </h3>
+                <p class="text-gray-700 mb-4">Agende suas consultas com nossos nutricionistas para um acompanhamento personalizado.</p>
+                <a href="Consulta.html" class="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 text-center block">
+                    Agendar Consulta
+                </a>
+            </div>
+
+            <!-- Diário Alimentar -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-xl font-bold mb-4 text-green-600">
+                    <i class="fas fa-book-medical mr-2"></i>Diário Alimentar
+                </h3>
+                <p class="text-gray-700 mb-4">Registre suas refeições diárias e acompanhe seu progresso na area de nutriçao perda de peso e etc.</p>
+                <a href="diario.html" class="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 text-center block">
+                    Começar Registro
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-green-500 text-white mt-12 py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="mb-4">© 2024 NutriVida - Todos os direitos reservados</p>
+            <div class="flex justify-center space-x-4">
+                <a href="#" class="hover:text-green-200"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="hover:text-green-200"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="hover:text-green-200"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Recupera os dados do perfil familiar do localStorage
+        const familyProfiles = JSON.parse(localStorage.getItem('familyProfiles')) || [];
+
+        // Pratos disponíveis
+        const dishes = [
+            { 
+                name: "Salada Mediterrânea", 
+                calories: 400, 
+                description: "Rica em proteínas e vitaminas, perfeita para o almoço.", 
+                restrictions: [], 
+                image: "https://via.placeholder.com/300x200?text=Salada+Mediterrânea", 
+                recipe: [
+                    "2 xícaras de alface",
+                    "1/2 xícara de tomate cereja",
+                    "1/4 xícara de azeitonas pretas",
+                    "1/4 xícara de queijo feta",
+                    "2 colheres de sopa de azeite de oliva",
+                    "1 colher de sopa de vinagre balsâmico"
+                ],
+                instructions: [
+                    "Lave e seque bem os vegetais.",
+                    "Corte os tomates cereja ao meio.",
+                    "Misture todos os ingredientes em uma tigela grande.",
+                    "Tempere com azeite de oliva e vinagre balsâmico.",
+                    "Sirva imediatamente."
+                ]
+            },
+            { 
+                name: "Salmão Grelhado", 
+                calories: 350, 
+                description: "Rico em ômega 3 e proteína magra.", 
+                restrictions: [], 
+                image: "https://via.placeholder.com/300x200?text=Salmão+Grelhado", 
+                recipe: [
+                    "2 filés de salmão",
+                    "1 colher de sopa de azeite de oliva",
+                    "1 colher de chá de alho picado",
+                    "Suco de 1 limão",
+                    "Sal e pimenta a gosto"
+                ],
+                instructions: [
+                    "Tempere os filés de salmão com sal, pimenta, alho e suco de limão.",
+                    "Aqueça uma frigideira com azeite de oliva.",
+                    "Grelhe os filés por 3-4 minutos de cada lado.",
+                    "Sirva com legumes ou arroz."
+                ]
+            },
+            { 
+                name: "Bowl de Quinoa", 
+                calories: 300, 
+                description: "Repleto de nutrientes e fibras.", 
+                restrictions: ["Vegetariana"], 
+                image: "https://via.placeholder.com/300x200?text=Bowl+de+Quinoa", 
+                recipe: [
+                    "1 xícara de quinoa cozida",
+                    "1/2 xícara de grão-de-bico",
+                    "1/4 xícara de cenoura ralada",
+                    "1/4 xícara de pepino picado",
+                    "2 colheres de sopa de molho tahine"
+                ],
+                instructions: [
+                    "Cozinhe a quinoa conforme as instruções da embalagem.",
+                    "Misture todos os ingredientes em uma tigela.",
+                    "Regue com o molho tahine antes de servir."
+                ]
+            },
+            { 
+                name: "Panqueca Sem Glúten", 
+                calories: 250, 
+                description: "Ideal para café da manhã ou lanche.", 
+                restrictions: ["Sem glúten"], 
+                image: "https://via.placeholder.com/300x200?text=Panqueca+Sem+Glúten", 
+                recipe: [
+                    "1 xícara de farinha de arroz",
+                    "1 ovo",
+                    "1 xícara de leite sem lactose",
+                    "1 colher de chá de fermento em pó",
+                    "1 colher de sopa de açúcar"
+                ],
+                instructions: [
+                    "Misture todos os ingredientes em uma tigela até obter uma massa homogênea.",
+                    "Aqueça uma frigideira antiaderente e unte com óleo.",
+                    "Despeje uma concha da massa e cozinhe até dourar dos dois lados.",
+                    "Sirva com frutas ou mel."
+                ]
+            },
+            { 
+                name: "Frango com Legumes", 
+                calories: 450, 
+                description: "Uma refeição balanceada com proteínas e vegetais.", 
+                restrictions: [], 
+                image: "https://via.placeholder.com/300x200?text=Frango+com+Legumes", 
+                recipe: [
+                    "200g de peito de frango",
+                    "1 xícara de brócolis",
+                    "1/2 xícara de cenoura em rodelas",
+                    "1 colher de sopa de azeite de oliva",
+                    "Sal e pimenta a gosto"
+                ],
+                instructions: [
+                    "Tempere o frango com sal e pimenta.",
+                    "Aqueça uma frigideira com azeite e grelhe o frango até dourar.",
+                    "Cozinhe os legumes no vapor até ficarem macios.",
+                    "Sirva o frango acompanhado dos legumes."
+                ]
+            }
+        ];
+
+        // Função para renderizar os pratos recomendados
+        function renderDishes() {
+            const dishesContainer = document.getElementById('recommended-dishes');
+            dishesContainer.innerHTML = ''; // Limpa os pratos anteriores
+
+            // Limita o número de pratos ao número de membros da família
+            const limitedDishes = dishes.slice(0, familyProfiles.length);
+
+            // Renderiza os pratos recomendados
+            limitedDishes.forEach((dish, index) => {
+                const dishElement = `
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                        <img src="${dish.image}" alt="${dish.name}" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="font-bold text-lg mb-2">${dish.name}</h3>
+                            <p class="text-gray-600 text-sm mb-2">${dish.calories} calorias</p>
+                            <p class="text-gray-700">${dish.description}</p>
+                            <button onclick="toggleRecipe(${index})" class="block mt-4 bg-green-500 text-white py-2 rounded-lg text-center hover:bg-green-600">
+                                Ver Receita
+                            </button>
+                            <div id="recipe-${index}" class="hidden mt-4">
+                                <h4 class="font-bold text-md mb-2">Ingredientes:</h4>
+                                <ul class="list-disc list-inside mb-4">
+                                    ${dish.recipe.map(ingredient => `<li>${ingredient}</li>`).join('')}
+                                </ul>
+                                <h4 class="font-bold text-md mb-2">Modo de Preparo:</h4>
+                                <ol class="list-decimal list-inside">
+                                    ${dish.instructions.map(step => `<li>${step}</li>`).join('')}
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                dishesContainer.innerHTML += dishElement;
+            });
+        }
+
+        // Fix the toggleRecipe function
+        function toggleRecipe(index) {
+            const recipeElement = document.getElementById(`recipe-${index}`);
+            if (recipeElement.classList.contains('hidden')) {
+                recipeElement.classList.remove('hidden');
+            } else {
+                recipeElement.classList.add('hidden');
+            }
+        }
+
+        // Mercados disponíveis
+        const markets = [
+            { 
+                name: "Mercado Central", 
+                address: "Rua das Flores, 123", 
+                description: "Oferece uma ampla variedade de produtos frescos e orgânicos.", 
+                image: "https://via.placeholder.com/300x200?text=Mercado+Central" 
+            },
+            { 
+                name: "Supermercado Econômico", 
+                address: "Avenida Brasil, 456", 
+                description: "Preços acessíveis e promoções semanais imperdíveis.", 
+                image: "https://via.placeholder.com/300x200?text=Supermercado+Econômico" 
+            },
+            { 
+                name: "Hortifruti Natural", 
+                address: "Rua das Palmeiras, 789", 
+                description: "Especializado em frutas, legumes e verduras frescas.", 
+                image: "https://via.placeholder.com/300x200?text=Hortifruti+Natural" 
+            },
+            { 
+                name: "Empório Saudável", 
+                address: "Praça Verde, 101", 
+                description: "Produtos naturais, integrais e sem glúten.", 
+                image: "https://via.placeholder.com/300x200?text=Empório+Saudável" 
+            }
+        ];
+
+        // Função para renderizar os mercados recomendados
+        function renderMarkets() {
+            const marketsContainer = document.getElementById('recommended-markets');
+            marketsContainer.innerHTML = ''; // Limpa os mercados anteriores
+
+            markets.forEach(market => {
+                const marketElement = `
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                        <img src="${market.image}" alt="${market.name}" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="font-bold text-lg mb-2">${market.name}</h3>
+                            <p class="text-gray-600 text-sm mb-2">${market.address}</p>
+                            <p class="text-gray-700">${market.description}</p>
+                        </div>
+                    </div>
+                `;
+                marketsContainer.innerHTML += marketElement;
+            });
+        }
+
+        // Chama a função ao carregar a página
+        document.addEventListener('DOMContentLoaded', renderDishes);
+        document.addEventListener('DOMContentLoaded', renderMarkets);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatInput = document.querySelector('input[placeholder="Digite sua mensagem..."]');
+            const chatButton = document.querySelector('.fa-paper-plane').closest('button');
+            const chatContainer = document.querySelector('.bg-gray-100');
+
+            // Respostas automáticas do nutricionista
+            const responses = [
+                "Entendido! Como posso ajudar você com sua alimentação?",
+                "Lembre-se de manter uma dieta equilibrada e beber bastante água.",
+                "Se precisar de ajuda com receitas saudáveis, posso sugerir algumas!",
+                "Você já registrou suas refeições no diário alimentar hoje?",
+                "Se precisar agendar uma consulta, use a aba de Agenda de Consultas."
+            ];
+
+            // Função para adicionar mensagens ao chat
+            function addMessage(sender, message) {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('mb-4');
+
+                if (sender === 'user') {
+                    messageElement.innerHTML = `
+                        <p class="text-sm text-gray-500 text-right">Você</p>
+                        <div class="bg-green-500 text-white rounded-lg p-3 inline-block ml-auto">
+                            ${message}
+                        </div>
+                    `;
+                } else if (sender === 'nutricionista') {
+                    messageElement.innerHTML = `
+                        <p class="text-sm text-gray-500">Nutricionista Ana</p>
+                        <div class="bg-green-100 rounded-lg p-3 inline-block">
+                            ${message}
+                        </div>
+                    `;
+                }
+
+                chatContainer.appendChild(messageElement);
+                chatContainer.scrollTop = chatContainer.scrollHeight; // Rola para a última mensagem
+            }
+
+            // Evento de clique no botão de enviar
+            chatButton.addEventListener('click', () => {
+                const userMessage = chatInput.value.trim();
+
+                if (userMessage) {
+                    // Adiciona a mensagem do usuário
+                    addMessage('user', userMessage);
+
+                    // Limpa o campo de entrada
+                    chatInput.value = '';
+
+                    // Resposta automática do nutricionista
+                    setTimeout(() => {
+                        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                        addMessage('nutricionista', randomResponse);
+                    }, 1000); // Resposta após 1 segundo
+                }
+            });
+
+            // Evento de pressionar Enter no campo de entrada
+            chatInput.addEventListener('keypress', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    chatButton.click();
+                }
+            });
+        });
+
+        function calculateCalories() {
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value) / 100; // Converter para metros
+            const age = parseInt(document.getElementById('age').value);
+            const activityLevel = parseFloat(document.getElementById('activity-level').value);
+
+            if (!weight || !height || !age || !activityLevel) {
+                alert('Por favor, preencha todos os campos corretamente.');
+                return;
+            }
+
+            // Fórmula de Harris-Benedict para calcular as calorias necessárias
+            const bmr = 10 * weight + 6.25 * (height * 100) - 5 * age + 5; // Fórmula para homens
+            const calories = (bmr * activityLevel).toFixed(0);
+
+            // Exibir o resultado
+            const resultDiv = document.getElementById('calorie-result');
+            resultDiv.innerHTML = `
+                <p><strong>Calorias Necessárias:</strong> ${calories} kcal/dia</p>
+            `;
+        }
+
+        function calculateIMC() {
+            const weight = parseFloat(document.getElementById('imc-weight').value);
+            const height = parseFloat(document.getElementById('imc-height').value) / 100;
+
+            if (!weight || !height) {
+                alert('Por favor, preencha todos os campos corretamente.');
+                return;
+            }
+
+            const imc = (weight / (height * height)).toFixed(2);
+            const classification = getIMCClassification(imc);
+            const healthStatus = getHealthStatus(imc);
+
+            const resultDiv = document.getElementById('imc-result');
+            resultDiv.innerHTML = `
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="text-xl font-bold mb-2">Seu IMC: ${imc}</p>
+                    <p class="text-lg mb-2">Classificação: <span class="${healthStatus.color}">${classification}</span></p>
+                    <p class="text-gray-600">${healthStatus.message}</p>
+                </div>
+            `;
+        }
+
+        function getHealthStatus(imc) {
+            if (imc < 18.5) return {
+                color: 'text-yellow-600',
+                message: 'Você está abaixo do peso ideal. Considere consultar um nutricionista.'
+            };
+            if (imc < 24.9) return {
+                color: 'text-green-600',
+                message: 'Parabéns! Você está com um peso saudável.'
+            };
+            if (imc < 29.9) return {
+                color: 'text-yellow-600',
+                message: 'Você está levemente acima do peso. Considere fazer mais exercícios.'
+            };
+            return {
+                color: 'text-red-600',
+                message: 'Atenção! Recomendamos consultar um profissional de saúde.'
+            };
+        }
+
+        function getIMCClassification(imc) {
+            if (imc < 18.5) return 'Abaixo do peso';
+            if (imc >= 18.5 && imc < 24.9) return 'Peso normal';
+            if (imc >= 25 && imc < 29.9) return 'Sobrepeso';
+            if (imc >= 30 && imc < 34.9) return 'Obesidade Grau I';
+            if (imc >= 35 && imc < 39.9) return 'Obesidade Grau II';
+            return 'Obesidade Grau III';
+        }
+
+        // Add the missing event handler for remove member
+        membersList.addEventListener('click', (event) => {
+            if (event.target.closest('.remove-member')) {
+                const index = event.target.closest('.remove-member').dataset.index;
+                familyProfiles.splice(index, 1);
+                localStorage.setItem('familyProfiles', JSON.stringify(familyProfiles));
+                renderFamilyProfiles();
+            }
+        });
+    </script>
+</body>
+</html>
